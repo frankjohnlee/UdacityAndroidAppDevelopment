@@ -15,10 +15,15 @@
  */
 package com.example.android.recyclerview;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * We couldn't come up with a good name for this class. Then, we realized
@@ -32,22 +37,63 @@ import android.widget.TextView;
  * If you don't like our puns, we named this Adapter GreenAdapter because its
  * contents are green.
  */
-// TODO (4) From GreenAdapter, extend RecyclerView.Adapter<NumberViewHolder>
-public class GreenAdapter {
 
-    // TODO (1) Add a private int variable called mNumberItems
+public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHolder>{ // From GreenAdapter, extend RecyclerView.Adapter<NumberViewHolder>
+    private int mNumberItems; // (1) Add a private int variable called mNumberItems
 
-    // TODO (2) Create a constructor for GreenAdapter that accepts an int as a parameter for numberOfItems
-    // TODO (3) Store the numberOfItems parameter in mNumberItems
+    public GreenAdapter(int numberOfItems){ // (2) Create a constructor for GreenAdapter that accepts an int as a parameter for numberOfItems
+        mNumberItems = numberOfItems; // (3) Store the numberOfItems parameter in mNumberItems
+    }
 
-    // TODO (5) Override the onCreateViewHolder method
-    // TODO (6) Create and return a new NumberViewHolder within this method
+    @Override
+    public NumberViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType){ // (5) Override the onCreateViewHolder method
+        /**
+         *
+         * This gets called when each new ViewHolder is created. This happens when the RecyclerView
+         * is laid out. Enough ViewHolders will be created to fill the screen and allow for scrolling.
+         *
+         * @param viewGroup The ViewGroup that these ViewHolders are contained within.
+         * @param viewType  If your RecyclerView has more than one type of item (which ours doesn't) you
+         *                  can use this viewType integer to provide a different layout. See
+         *                  {@link android.support.v7.widget.RecyclerView.Adapter#getItemViewType(int)}
+         *                  for more details.
+         * @return A new NumberViewHolder that holds the View for each list item
+         */
+        // (6) Create and return a new NumberViewHolder within this method
+        Context context = viewGroup.getContext();
+        int layoutIdForListItem = R.layout.number_list_item;
+        LayoutInflater inflater = LayoutInflater.from(context);
+        boolean shouldAttachToParentImmediately = false;
+        // inflator.inflate(int ID, viewGroup (view with children views), boolean)
+        View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
+        NumberViewHolder viewHolder = new NumberViewHolder(view); // Here we create a new viewHolder
+        return viewHolder;
+    }
 
-    // TODO (7) Override onBindViewHolder
-    // TODO (8) Within onBindViewHolder, call holder.bind and pass in the position
+    // (7) Override onBindViewHolder
+    @Override
+    public void onBindViewHolder(NumberViewHolder holder, int position){
+        /**
+         * OnBindViewHolder is called by the RecyclerView to display the data at the specified
+         * position. In this method, we update the contents of the ViewHolder to display the correct
+         * indices in the list for this particular position, using the "position" argument that is conveniently
+         * passed into us.
+         *
+         * @param holder   The ViewHolder which should be updated to represent the contents of the
+         *                 item at the given position in the data set.
+         * @param position The position of the item within the adapter's data set.
+         */
 
-    // TODO (9) Override getItemCount and return the number of items to display
+        Log.d(TAG, "#" + position);
+        holder.bind(position); // (8) Within onBindViewHolder, call holder.bind and pass in the position
+    }
 
+
+    // (9) Override getItemCount and return the number of items to display
+    @Override
+    public int getItemCount(){
+        return mNumberItems;
+    }
     /**
      * Cache of the children views for a list item.
      */
